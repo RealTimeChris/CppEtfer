@@ -45,7 +45,7 @@ template<> struct cpp_etfer::core<UpdatePresenceData> {
 	static constexpr auto parseValue = createObject("afk", &value_type::afk, "activities", &value_type::activities, "since", &value_type::since, "status", &value_type::statusReal);
 };
 ```
-2. Pass in an instance of the structure which you would like to parse into into the `cpp_etfer::etf_parser::parseEtfToData()` function, along with a string containing the data to be parsed:
+2. Pass in an instance of the structure which you would like to parse into, into the `cpp_etfer::etf_parser::parseEtfToData()` function, along with a string containing the data to be parsed:
 ```cpp
 auto newString = updatePresenceData.operator cpp_etfer::etf_serializer().operator std::basic_string<uint8_t>();
 
