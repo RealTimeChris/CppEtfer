@@ -32,7 +32,30 @@ FetchContent_MakeAvailable(CppEtfer)
 target_link_libraries("${PROJECT_NAME}" PRIVATE CppEtfer)
 ```
 
-## Usage - Parsing
+## Usage - Parsing Directly to Data
+1. Create a specialization of the `cpp_etfer_core` struct for the class which you would like to parse into:
+```cpp
+template<> struct cpp_etfer::core<ActivityData> {
+	using value_type				 = ActivityData;
+	static constexpr auto parseValue = createObject("name", &value_type::name, "type", &value_type::type, "state", &value_type::state);
+};
+
+template<> struct cpp_etfer::core<UpdatePresenceData> {
+	using value_type = UpdatePresenceData;
+	static constexpr auto parseValue = createObject("afk", &value_type::afk, "activities", &value_type::activities, "since", &value_type::since, "status", &value_type::statusReal);
+};
+```
+2. Pass in an instance of the structure which you would like to parse into into the `cpp_etfer::etf_parser::parseEtfToData()` function, along with a string containing the data to be parsed:
+```cpp
+auto newString = updatePresenceData.operator cpp_etfer::etf_serializer().operator std::basic_string<uint8_t>();
+
+cpp_etfer::etf_parser parser{};
+updatePresenceData.activities.clear();
+parser.parseEtfToData(updatePresenceData, newString);
+```
+3. Use the data.
+
+## Usage - Parsing to Json Data
 1. Instantiate an instance of etf_parser.
 2. Pass to its method `parseEtfToJson` a string of some sort containing the data to be parsed.
 3. Collect the output of the function and use it.
